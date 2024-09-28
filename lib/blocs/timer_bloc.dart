@@ -4,7 +4,7 @@ import 'package:timer_app/blocs/bloc_event.dart';
 import 'timer_state.dart';
 
 class TimerBloc extends Bloc<TimerEvent, TimerState> {
-  List<Timer?> _timers = []; // List untuk menyimpan semua Timer
+  final List<Timer?> _timers = []; // List untuk menyimpan semua Timer
 
   TimerBloc()
       : super(TimerState(

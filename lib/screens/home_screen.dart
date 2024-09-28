@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:timer_app/constants/app_colors.dart';
 import 'package:timer_app/screens/result_screen.dart';
+import 'package:timer_app/screens/setting_screen.dart';
 
 import '../blocs/bloc_event.dart';
 import '../blocs/timer_bloc.dart';
@@ -60,7 +61,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.primary,
       appBar: AppBar(
         title: Text(
           'FreTimer',
@@ -69,7 +69,18 @@ class _HomeScreenState extends State<HomeScreen> {
             color: AppColors.white,
           ),
         ),
-        backgroundColor: AppColors.primary,
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => SettingScreen()));
+            },
+            icon: Icon(
+              Icons.settings,
+              color: AppColors.white,
+            ),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(

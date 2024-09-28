@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:timer_app/constants/app_colors.dart';
+import 'package:timer_app/screens/widgets/circular_proses_widget.dart';
 
 import '../blocs/bloc_event.dart';
 import '../blocs/timer_bloc.dart';
@@ -46,58 +47,18 @@ class ResultScreen extends StatelessWidget {
       ),
       body: BlocBuilder<TimerBloc, TimerState>(
         builder: (context, state) {
-          // Periksa apakah ada timer yang sedang berjalan
           if (state.durations.isEmpty) {
             return Center(
               child: Text(
-                'No timers running',
+                'Belum Ada Timer',
                 style: TextStyle(color: AppColors.white),
               ),
             );
           }
 
-          // Menampilkan daftar timer
           return ListView.builder(
             itemCount: state.durations.length,
             itemBuilder: (context, index) {
-              final duration = state.durations[index];
-              final hours = (duration ~/ 3600).toString().padLeft(2, '0');
-              final minutes =
-                  ((duration % 3600) ~/ 60).toString().padLeft(2, '0');
-              final seconds = (duration % 60).toString().padLeft(2, '0');
-
-              final totalDurationInMillis = (duration) * 1000;
-              String formattedDuration(int duration) {
-                if (duration >= 0) {
-                  // Timer masih berjalan atau habis tepat di 0
-                  final hours = (duration ~/ 3600).toString().padLeft(2, '0');
-                  final minutes =
-                      ((duration % 3600) ~/ 60).toString().padLeft(2, '0');
-                  final seconds = (duration % 60).toString().padLeft(2, '0');
-
-                  // Jika durasi lebih dari atau sama dengan 1 jam, tampilkan "hh:mm:ss"
-                  if (duration >= 3600) {
-                    return "$hours:$minutes:$seconds";
-                  }
-                  // Jika kurang dari 1 jam, tampilkan hanya "mm:ss"
-                  else if (duration >= 60) {
-                    return "$minutes:$seconds";
-                  }
-                  // Jika hanya beberapa detik yang tersisa
-                  else {
-                    return "00:$seconds";
-                  }
-                } else {
-                  final negativeDuration = duration.abs();
-                  final minutes =
-                      (negativeDuration ~/ 60).toString().padLeft(2, '0');
-                  final seconds =
-                      (negativeDuration % 60).toString().padLeft(2, '0');
-
-                  return "-$minutes:$seconds";
-                }
-              }
-
               return Container(
                 padding: const EdgeInsets.all(16),
                 margin: const EdgeInsets.all(16),
@@ -125,9 +86,7 @@ class ResultScreen extends StatelessWidget {
                             color: AppColors.primary,
                           ),
                           child: IconButton(
-                            onPressed: () {
-                              // Aksi untuk menghapus timer ini (implementasi bisa ditambahkan)
-                            },
+                            onPressed: () {},
                             icon: Icon(
                               Icons.clear,
                               color: AppColors.white,
@@ -136,41 +95,9 @@ class ResultScreen extends StatelessWidget {
                         ),
                       ],
                     ),
-                    CircularPercentIndicator(
-                      radius: 130.0,
-                      animation: true,
-                      // Ensure the animationDuration is positive
-                      animationDuration:
-                          totalDurationInMillis > 0 ? totalDurationInMillis : 1,
-                      lineWidth: 15.0,
-                      // Ensure percent is between 0 and 1
-                      percent: 1,
-                      center: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            formattedDuration(state.durations[index]),
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20.0,
-                              color: AppColors.white,
-                            ),
-                          ),
-                          IconButton(
-                            icon: Icon(
-                              Icons.lock_reset,
-                              color: AppColors.white,
-                            ),
-                            onPressed: () {
-                              // Aksi reset timer
-                              context.read<TimerBloc>().add(TimerReset(index));
-                            },
-                          ),
-                        ],
-                      ),
-                      circularStrokeCap: CircularStrokeCap.butt,
-                      backgroundColor: AppColors.primary,
-                      progressColor: AppColors.white,
+                    CircularProgressWidget(
+                      progress: 1,
+                      durationText: '${state.durations[index]} detik',
                     ),
                     Container(
                       margin: EdgeInsets.only(top: 12),
